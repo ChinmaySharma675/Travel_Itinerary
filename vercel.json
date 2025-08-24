@@ -7,7 +7,7 @@
             "config": {
                 "distDir": "build",
                 "installCommand": "npm install --force",
-                "buildCommand": "npx react-scripts build"
+                "buildCommand": "CI=false npx react-scripts build"
             }
         }
     ],

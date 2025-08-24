@@ -17,12 +17,12 @@ import L from "leaflet";
 // Fix default marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-    iconRetinaUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-    iconUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-    shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
 // Custom marker icons for numbered stops
@@ -51,7 +51,7 @@ const createNumberedIcon = (number, color = '#ff6b35') => {
 // Map controls component
 const MapControls = ({ mapRef }) => {
   const map = useMap();
-  
+
   useEffect(() => {
     if (mapRef && map) {
       mapRef.current = map;
@@ -147,7 +147,7 @@ const useImageCache = () => {
       } catch (err) {
         console.error("getOrFetch image failed:", err);
       }
-      
+
       // Always provide a fallback
       const fallback = `https://source.unsplash.com/600x400/?${encodeURIComponent(
         query || "travel"
@@ -242,10 +242,10 @@ const Home = () => {
   // -------------------- Derived: all itinerary data for map --------------------
   const allItineraryData = useMemo(() => {
     if (!itins.length) return [];
-    
+
     const allPlaces = [];
     let dayNumber = 1;
-    
+
     itins.forEach((day, dayIndex) => {
       if (day?.itinerary?.length) {
         day.itinerary.forEach((place, placeIndex) => {
@@ -260,7 +260,7 @@ const Home = () => {
         dayNumber++; // Increment day number for each day
       }
     });
-    
+
     return allPlaces;
   }, [itins]);
 
@@ -274,18 +274,18 @@ const Home = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       // Use full container dimensions for better map display
-      setMapSize({ 
-        width: rect.width, 
-        height: rect.height 
+      setMapSize({
+        width: rect.width,
+        height: rect.height
       });
     };
-    
+
     // Initial size update
     updateSize();
-    
+
     // Update size after a short delay to ensure container is fully rendered
     const timer = setTimeout(updateSize, 100);
-    
+
     window.addEventListener("resize", updateSize);
     return () => {
       window.removeEventListener("resize", updateSize);
@@ -314,7 +314,7 @@ const Home = () => {
         }
       }, 500);
     }
-  }, [itins.length, allItineraryData.length]);
+  }, [itins.length, allItineraryData.length, allItineraryData]);
 
   // -------------------- Effects: Force map refresh when map size changes --------------------
   useEffect(() => {
@@ -333,7 +333,7 @@ const Home = () => {
     if (days > 0 && itins.length > 0) {
       const d = itins[selectedDay] || itins[0];
       setDayData(d);
-      
+
       // Center the map on the selected day's location with a slight delay
       setTimeout(() => {
         if (mapRef.current && allItineraryData.length > 0) {
@@ -351,23 +351,23 @@ const Home = () => {
   // -------------------- Handlers --------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate all fields are filled
     if (!city.trim()) {
       alert("Please enter a city name");
       return;
     }
-    
+
     if (!budget || budget <= 0) {
       alert("Please enter a valid budget amount");
       return;
     }
-    
+
     if (!inputDays || inputDays <= 0) {
       alert("Please enter the number of days");
       return;
     }
-    
+
     // Clear all previous data before starting new generation
     setSelectedPlace(null);
     setSelectedDay(0);
@@ -394,7 +394,7 @@ const Home = () => {
   const handleDayChipClick = (i) => {
     setSelectedDay(i);
     setSelectedPlace(null);
-    
+
     // Use setTimeout to ensure the map is ready and dayData is updated
     setTimeout(() => {
       // Find the location for this specific day number
@@ -416,7 +416,7 @@ const Home = () => {
     if (place.nearbyFood && place.nearbyFood.length > 0) {
       return place.nearbyFood[0]; // Return first restaurant from API
     }
-    
+
     // Fallback for when API data isn't available
     return {
       name: "Local Restaurant",
@@ -439,12 +439,12 @@ const Home = () => {
   const getImageForPlace = (place) => {
     const key = (place.name || place.location?.label || "place").toLowerCase();
     const imageUrl = dayImageMap[key] || place.image;
-    
+
     if (imageUrl) {
       console.log(`Using cached/prefetched image for ${place.name}:`, imageUrl);
       return imageUrl;
     }
-    
+
     // Fallback to Unsplash with a more specific query
     const query = place.name || place.location?.label || "travel destination";
     const fallbackUrl = `https://source.unsplash.com/600x400/?${encodeURIComponent(query)}`;
@@ -473,10 +473,10 @@ const Home = () => {
               rich details, images, and maps. Click any place to view its story
               and navigate easily.
             </p>
-                         <div style={styles.heroTips}>
-               <SoftBadge>Gemini-powered</SoftBadge>
-               <SoftBadge>Unsplash Photos</SoftBadge>
-             </div>
+            <div style={styles.heroTips}>
+              <SoftBadge>Gemini-powered</SoftBadge>
+              <SoftBadge>Unsplash Photos</SoftBadge>
+            </div>
           </div>
           <div style={styles.heroRight}>
             <div style={styles.pulseDot} />
@@ -491,65 +491,65 @@ const Home = () => {
         <div style={styles.leftPanel} className="left-panel">
           {/* Form */}
           <form onSubmit={handleSubmit} style={styles.form}>
-                         <div style={styles.row} className="form-row">
-               <input
-                 type="text"
-                 placeholder="City (e.g., Kyoto) *"
-                 value={city}
-                 onChange={(e) => setCity(e.target.value)}
-                 style={{
-                   ...styles.input,
-                   borderColor: !city.trim() ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.18)"
-                 }}
-                 required
-               />
-                               <input
-                  type="number"
-                  inputMode="numeric"
-                  placeholder="Budget (e.g., 1200) *"
-                  min="1"
-                  value={budget === "" ? "" : budget}
-                  onChange={(e) =>
-                    setBudget(e.target.value === "" ? "" : Number(e.target.value))
-                  }
-                  style={{
-                    ...styles.input,
-                    borderColor: (!budget || budget <= 0) ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.18)"
-                  }}
-                  required
-                />
-               <input
-                 type="number"
-                 inputMode="numeric"
-                 placeholder="Days (1–21) *"
-                 min="1"
-                 value={inputDays === "" ? "" : inputDays}
-                 onChange={(e) =>
-                   setInputDays(
-                     e.target.value === "" ? "" : Number(e.target.value)
-                   )
-                 }
-                 style={{
-                   ...styles.input,
-                   borderColor: (!inputDays || inputDays <= 0) ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.18)"
-                 }}
-                 required
-               />
-             </div>
-                         <button 
-               type="submit" 
-               style={{
-                 ...styles.button,
-                 opacity: (!city.trim() || !budget || !inputDays) ? 0.5 : 1,
-                 cursor: (!city.trim() || !budget || !inputDays) ? "not-allowed" : "pointer"
-               }} 
-               disabled={loading || !city.trim() || !budget || !inputDays}
-             >
-               {loading ? "Generating…" : "Generate"}
-                          </button>
-           </form>
+            <div style={styles.row} className="form-row">
+              <input
+                type="text"
+                placeholder="City (e.g., Kyoto) *"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                style={{
+                  ...styles.input,
+                  borderColor: !city.trim() ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.18)"
+                }}
+                required
+              />
+              <input
+                type="number"
+                inputMode="numeric"
+                placeholder="Budget (e.g., 1200) *"
+                min="1"
+                value={budget === "" ? "" : budget}
+                onChange={(e) =>
+                  setBudget(e.target.value === "" ? "" : Number(e.target.value))
+                }
+                style={{
+                  ...styles.input,
+                  borderColor: (!budget || budget <= 0) ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.18)"
+                }}
+                required
+              />
+              <input
+                type="number"
+                inputMode="numeric"
+                placeholder="Days (1–21) *"
+                min="1"
+                value={inputDays === "" ? "" : inputDays}
+                onChange={(e) =>
+                  setInputDays(
+                    e.target.value === "" ? "" : Number(e.target.value)
+                  )
+                }
+                style={{
+                  ...styles.input,
+                  borderColor: (!inputDays || inputDays <= 0) ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.18)"
+                }}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              style={{
+                ...styles.button,
+                opacity: (!city.trim() || !budget || !inputDays) ? 0.5 : 1,
+                cursor: (!city.trim() || !budget || !inputDays) ? "not-allowed" : "pointer"
+              }}
+              disabled={loading || !city.trim() || !budget || !inputDays}
+            >
+              {loading ? "Generating…" : "Generate"}
+            </button>
+          </form>
 
-           
+
 
           {/* Loading shimmer */}
           {loading && (
@@ -577,21 +577,21 @@ const Home = () => {
             </div>
           )}
 
-                     {/* Trip meta */}
-           {!loading && days > 0 && (
-             <div style={styles.meta}>
-               <div>
-                 <span style={styles.metaKey}>City:</span> {city || "—"}
-               </div>
-                               <div>
-                  <span style={styles.metaKey}>Budget:</span>{" "}
-                  {budget ? `$${budget}` : "—"}
-                </div>
-                <div>
-                  <span style={styles.metaKey}>Days:</span> {days}
-                </div>
-             </div>
-           )}
+          {/* Trip meta */}
+          {!loading && days > 0 && (
+            <div style={styles.meta}>
+              <div>
+                <span style={styles.metaKey}>City:</span> {city || "—"}
+              </div>
+              <div>
+                <span style={styles.metaKey}>Budget:</span>{" "}
+                {budget ? `$${budget}` : "—"}
+              </div>
+              <div>
+                <span style={styles.metaKey}>Days:</span> {days}
+              </div>
+            </div>
+          )}
 
           {/* Day chips */}
           {!loading && days > 0 && itins.length > 0 && (
@@ -623,16 +623,16 @@ const Home = () => {
                     onClick={() => setSelectedPlace(place)}
                     className="card-anim"
                   >
-                                         <div
-                       style={{
-                         ...styles.cardImage,
-                         backgroundImage: `url("${imgUrl}")`,
-                         backgroundSize: "cover",
-                         backgroundPosition: "center",
-                         backgroundRepeat: "no-repeat",
-                       }}
-                       aria-hidden
-                     />
+                    <div
+                      style={{
+                        ...styles.cardImage,
+                        backgroundImage: `url("${imgUrl}")`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                      aria-hidden
+                    />
                     <div style={styles.cardOverlay} />
                     <div style={styles.cardContent}>
                       <div style={styles.cardTitle}>{place.name}</div>
@@ -714,18 +714,18 @@ const Home = () => {
                 <div style={styles.detailLeft}>
                   {/* Big image */}
                   <div style={styles.detailHeroImageWrap}>
-                                         <div
-                       style={{
-                         ...styles.detailHeroImage,
-                         backgroundImage: `url("${getImageForPlace(
-                           selectedPlace
-                         )}")`,
-                         backgroundSize: "cover",
-                         backgroundPosition: "center",
-                         backgroundRepeat: "no-repeat",
-                       }}
-                       aria-hidden
-                     />
+                    <div
+                      style={{
+                        ...styles.detailHeroImage,
+                        backgroundImage: `url("${getImageForPlace(
+                          selectedPlace
+                        )}")`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                      aria-hidden
+                    />
                     <div style={styles.detailHeroOverlay} />
                     <div style={styles.detailHeroLabel}>
                       {selectedPlace.location?.label || ""}
@@ -786,105 +786,105 @@ const Home = () => {
               <Fragment>
                 {/* Interactive Map Section */}
                 <div style={styles.mapSection}>
-                                     <div style={styles.mapHeader}>
-                     <h2 style={styles.mapTitle}>Interactive Route</h2>
-                     <div style={styles.mapControls}>
-                       <button 
-                         style={styles.mapControlBtn}
-                         onClick={() => {
-                           if (mapRef.current && allItineraryData.length) {
-                             const bounds = L.latLngBounds(allItineraryData.map(p => [p.location.lat, p.location.lng]));
-                             mapRef.current.fitBounds(bounds, { padding: [20, 20] });
-                           }
-                         }}
-                       >
-                         Fit to Route
-                       </button>
-                       <button 
-                         style={styles.mapControlBtn}
-                         onClick={() => mapRef.current?.zoomIn()}
-                       >
-                         Zoom +
-                       </button>
-                       <button 
-                         style={styles.mapControlBtn}
-                         onClick={() => mapRef.current?.zoomOut()}
-                       >
-                         Zoom -
-                       </button>
-                     </div>
-                     <button 
-                       style={styles.googleMapsBtn}
-                       onClick={() => {
-                         if (allItineraryData.length) {
-                           const first = allItineraryData[0].location;
-                           window.open(`https://www.google.com/maps?q=${first.lat},${first.lng}`, '_blank');
-                         }
-                       }}
-                     >
-                       Open in Google Maps
-                     </button>
-                  </div>
-                  
-                                     <div style={styles.mapContainer}>
-                                           <MapContainer
-                        center={allItineraryData.length > 0 ? [allItineraryData[0].location.lat, allItineraryData[0].location.lng] : [0, 0]}
-                        zoom={10}
-                        style={{ height: "100%", width: "100%", minHeight: "400px" }}
-                        key={`map-${itins.length}-${selectedDay}`}
-                        whenCreated={(map) => {
-                          if (mapRef.current !== map) {
-                            mapRef.current = map;
+                  <div style={styles.mapHeader}>
+                    <h2 style={styles.mapTitle}>Interactive Route</h2>
+                    <div style={styles.mapControls}>
+                      <button
+                        style={styles.mapControlBtn}
+                        onClick={() => {
+                          if (mapRef.current && allItineraryData.length) {
+                            const bounds = L.latLngBounds(allItineraryData.map(p => [p.location.lat, p.location.lng]));
+                            mapRef.current.fitBounds(bounds, { padding: [20, 20] });
                           }
                         }}
                       >
-                       <TileLayer
-                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                         attribution="&copy; OpenStreetMap contributors"
-                         maxZoom={19}
-                       />
-                                               {allItineraryData.map((place, idx) => (
-                          <Marker 
-                            key={idx} 
-                            position={[place.location.lat, place.location.lng]} 
-                            icon={createNumberedIcon(place.dayNumber, ['#ff6b35', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'][place.dayIndex % 5])}
-                            eventHandlers={{
-                              click: () => setSelectedPlace(place)
-                            }}
-                          >
-                                                         <Popup>
-                               <div style={styles.popupContent}>
-                                 <div style={styles.popupHeader}>
-                                   <span style={styles.popupDay}>Day {place.dayNumber}</span>
-                                   <span style={styles.popupLocation}>{place.location?.label || place.name}</span>
-                                 </div>
-                                 <div style={styles.popupTitle}>{place.name}</div>
-                                 <div style={styles.popupDescription}>
-                                   {place.description?.substring(0, 120)}...
-                                 </div>
-                                 <div style={styles.popupActions}>
-                                   <button 
-                                     style={styles.popupButton}
-                                     onClick={() => setSelectedPlace(place)}
-                                   >
-                                     View Details
-                                   </button>
-                                 </div>
-                               </div>
-                             </Popup>
-                          </Marker>
-                        ))}
-                       {allRoutePositions.length > 1 && (
-                         <Polyline 
-                           positions={allRoutePositions}
-                           color="#2196F3"
-                           weight={3}
-                           opacity={0.8}
-                         />
-                       )}
-                       <MapControls mapRef={mapRef} />
-                     </MapContainer>
-                   </div>
+                        Fit to Route
+                      </button>
+                      <button
+                        style={styles.mapControlBtn}
+                        onClick={() => mapRef.current?.zoomIn()}
+                      >
+                        Zoom +
+                      </button>
+                      <button
+                        style={styles.mapControlBtn}
+                        onClick={() => mapRef.current?.zoomOut()}
+                      >
+                        Zoom -
+                      </button>
+                    </div>
+                    <button
+                      style={styles.googleMapsBtn}
+                      onClick={() => {
+                        if (allItineraryData.length) {
+                          const first = allItineraryData[0].location;
+                          window.open(`https://www.google.com/maps?q=${first.lat},${first.lng}`, '_blank');
+                        }
+                      }}
+                    >
+                      Open in Google Maps
+                    </button>
+                  </div>
+
+                  <div style={styles.mapContainer}>
+                    <MapContainer
+                      center={allItineraryData.length > 0 ? [allItineraryData[0].location.lat, allItineraryData[0].location.lng] : [0, 0]}
+                      zoom={10}
+                      style={{ height: "100%", width: "100%", minHeight: "400px" }}
+                      key={`map-${itins.length}-${selectedDay}`}
+                      whenCreated={(map) => {
+                        if (mapRef.current !== map) {
+                          mapRef.current = map;
+                        }
+                      }}
+                    >
+                      <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution="&copy; OpenStreetMap contributors"
+                        maxZoom={19}
+                      />
+                      {allItineraryData.map((place, idx) => (
+                        <Marker
+                          key={idx}
+                          position={[place.location.lat, place.location.lng]}
+                          icon={createNumberedIcon(place.dayNumber, ['#ff6b35', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'][place.dayIndex % 5])}
+                          eventHandlers={{
+                            click: () => setSelectedPlace(place)
+                          }}
+                        >
+                          <Popup>
+                            <div style={styles.popupContent}>
+                              <div style={styles.popupHeader}>
+                                <span style={styles.popupDay}>Day {place.dayNumber}</span>
+                                <span style={styles.popupLocation}>{place.location?.label || place.name}</span>
+                              </div>
+                              <div style={styles.popupTitle}>{place.name}</div>
+                              <div style={styles.popupDescription}>
+                                {place.description?.substring(0, 120)}...
+                              </div>
+                              <div style={styles.popupActions}>
+                                <button
+                                  style={styles.popupButton}
+                                  onClick={() => setSelectedPlace(place)}
+                                >
+                                  View Details
+                                </button>
+                              </div>
+                            </div>
+                          </Popup>
+                        </Marker>
+                      ))}
+                      {allRoutePositions.length > 1 && (
+                        <Polyline
+                          positions={allRoutePositions}
+                          color="#2196F3"
+                          weight={3}
+                          opacity={0.8}
+                        />
+                      )}
+                      <MapControls mapRef={mapRef} />
+                    </MapContainer>
+                  </div>
                 </div>
 
                 {/* Day preview chips at bottom of map */}
@@ -914,7 +914,7 @@ const Home = () => {
             <h2 style={styles.mobileDetailsTitle}>📱 Stop Details & Food Picks</h2>
             <p style={styles.mobileDetailsSubtitle}>Detailed itinerary with food recommendations</p>
           </div>
-          
+
           <div style={styles.mobileDaySelector}>
             {itins.map((day, index) => (
               <button
@@ -942,7 +942,7 @@ const Home = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Food Recommendation */}
                 <div style={styles.mobileFoodSection}>
                   <h4 style={styles.mobileFoodTitle}>🍽️ Nearby Food:</h4>
@@ -1010,99 +1010,99 @@ const Home = () => {
             ))}
           </div>
 
-                     {/* Daily Itinerary Summary */}
-           <div style={styles.mobileSummaryCard}>
-             <h2 style={styles.mobileSummaryTitle}>📋 Daily Itinerary Summary</h2>
-             <div style={styles.mobileSummaryContent}>
-               <div style={styles.mobileSummaryHeader}>
-                 <div style={styles.mobileSummaryDayInfo}>
-                   <span style={styles.mobileSummaryDayNumber}>Day {selectedDay + 1}</span>
-                   <span style={styles.mobileSummaryDayTitle}>
-                     {itins[selectedDay]?.title || 'Exploring the city'}
-                   </span>
-                 </div>
-                 <div style={styles.mobileSummaryStats}>
-                   <div style={styles.mobileSummaryStat}>
-                     <span style={styles.mobileSummaryStatLabel}>📍 Stops</span>
-                     <span style={styles.mobileSummaryStatValue}>
-                       {itins[selectedDay]?.itinerary?.length || 0}
-                     </span>
-                   </div>
-                   <div style={styles.mobileSummaryStat}>
-                     <span style={styles.mobileSummaryStatLabel}>⏱️ Duration</span>
-                     <span style={styles.mobileSummaryStatValue}>
-                       {Math.round((itins[selectedDay]?.itinerary?.length || 0) * 2.5)}h
-                     </span>
-                   </div>
-                                       <div style={styles.mobileSummaryStat}>
-                      <span style={styles.mobileSummaryStatLabel}>💰 Budget</span>
-                      <span style={styles.mobileSummaryStatValue}>
-                        ${budget ? Math.round(budget / days) : 0}
-                      </span>
-                    </div>
-                 </div>
-               </div>
-               
-               <div style={styles.mobileSummaryTimeline}>
-                 <h3 style={styles.mobileSummaryTimelineTitle}>🗺️ Route Overview</h3>
-                 <div style={styles.mobileSummaryTimelineList}>
-                   {itins[selectedDay]?.itinerary?.map((place, index) => (
-                     <div key={index} style={styles.mobileSummaryTimelineItem}>
-                       <div style={styles.mobileSummaryTimelineDot}>
-                         <span style={styles.mobileSummaryTimelineNumber}>{index + 1}</span>
-                       </div>
-                       <div style={styles.mobileSummaryTimelineContent}>
-                         <div style={styles.mobileSummaryTimelineName}>{place.name}</div>
-                         <div style={styles.mobileSummaryTimelineTime}>
-                           {getTimeOfDay(index)} • {getDuration(index)}
-                         </div>
-                         <div style={styles.mobileSummaryTimelineDesc}>
-                           {place.description?.substring(0, 80)}...
-                         </div>
-                       </div>
-                     </div>
-                   ))}
-                 </div>
-               </div>
-               
-               <div style={styles.mobileSummaryTips}>
-                 <h3 style={styles.mobileSummaryTipsTitle}>💡 Pro Tips</h3>
-                 <div style={styles.mobileSummaryTipsList}>
-                   <div style={styles.mobileSummaryTip}>
-                     <span style={styles.mobileSummaryTipIcon}>🚶‍♂️</span>
-                     <span>Start early to avoid crowds at popular attractions</span>
-                   </div>
-                   <div style={styles.mobileSummaryTip}>
-                     <span style={styles.mobileSummaryTipIcon}>🍽️</span>
-                     <span>Try local cuisine at recommended restaurants</span>
-                   </div>
-                   <div style={styles.mobileSummaryTip}>
-                     <span style={styles.mobileSummaryTipIcon}>📸</span>
-                     <span>Don't forget to capture memories at each stop</span>
-                   </div>
-                   <div style={styles.mobileSummaryTip}>
-                     <span style={styles.mobileSummaryTipIcon}>💳</span>
-                     <span>Keep some cash handy for small purchases</span>
-                   </div>
-                 </div>
-               </div>
-               
-               <div style={styles.mobileSummaryFooter}>
-                 <div style={styles.mobileSummaryFooterItem}>
-                   <span style={styles.mobileSummaryFooterLabel}>Total Distance:</span>
-                   <span style={styles.mobileSummaryFooterValue}>
-                     ~{Math.round((itins[selectedDay]?.itinerary?.length || 0) * 2.5)} km
-                   </span>
-                 </div>
-                                   <div style={styles.mobileSummaryFooterItem}>
-                    <span style={styles.mobileSummaryFooterLabel}>Estimated Cost:</span>
-                    <span style={styles.mobileSummaryFooterValue}>
+          {/* Daily Itinerary Summary */}
+          <div style={styles.mobileSummaryCard}>
+            <h2 style={styles.mobileSummaryTitle}>📋 Daily Itinerary Summary</h2>
+            <div style={styles.mobileSummaryContent}>
+              <div style={styles.mobileSummaryHeader}>
+                <div style={styles.mobileSummaryDayInfo}>
+                  <span style={styles.mobileSummaryDayNumber}>Day {selectedDay + 1}</span>
+                  <span style={styles.mobileSummaryDayTitle}>
+                    {itins[selectedDay]?.title || 'Exploring the city'}
+                  </span>
+                </div>
+                <div style={styles.mobileSummaryStats}>
+                  <div style={styles.mobileSummaryStat}>
+                    <span style={styles.mobileSummaryStatLabel}>📍 Stops</span>
+                    <span style={styles.mobileSummaryStatValue}>
+                      {itins[selectedDay]?.itinerary?.length || 0}
+                    </span>
+                  </div>
+                  <div style={styles.mobileSummaryStat}>
+                    <span style={styles.mobileSummaryStatLabel}>⏱️ Duration</span>
+                    <span style={styles.mobileSummaryStatValue}>
+                      {Math.round((itins[selectedDay]?.itinerary?.length || 0) * 2.5)}h
+                    </span>
+                  </div>
+                  <div style={styles.mobileSummaryStat}>
+                    <span style={styles.mobileSummaryStatLabel}>💰 Budget</span>
+                    <span style={styles.mobileSummaryStatValue}>
                       ${budget ? Math.round(budget / days) : 0}
                     </span>
                   </div>
-               </div>
-             </div>
-           </div>
+                </div>
+              </div>
+
+              <div style={styles.mobileSummaryTimeline}>
+                <h3 style={styles.mobileSummaryTimelineTitle}>🗺️ Route Overview</h3>
+                <div style={styles.mobileSummaryTimelineList}>
+                  {itins[selectedDay]?.itinerary?.map((place, index) => (
+                    <div key={index} style={styles.mobileSummaryTimelineItem}>
+                      <div style={styles.mobileSummaryTimelineDot}>
+                        <span style={styles.mobileSummaryTimelineNumber}>{index + 1}</span>
+                      </div>
+                      <div style={styles.mobileSummaryTimelineContent}>
+                        <div style={styles.mobileSummaryTimelineName}>{place.name}</div>
+                        <div style={styles.mobileSummaryTimelineTime}>
+                          {getTimeOfDay(index)} • {getDuration(index)}
+                        </div>
+                        <div style={styles.mobileSummaryTimelineDesc}>
+                          {place.description?.substring(0, 80)}...
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={styles.mobileSummaryTips}>
+                <h3 style={styles.mobileSummaryTipsTitle}>💡 Pro Tips</h3>
+                <div style={styles.mobileSummaryTipsList}>
+                  <div style={styles.mobileSummaryTip}>
+                    <span style={styles.mobileSummaryTipIcon}>🚶‍♂️</span>
+                    <span>Start early to avoid crowds at popular attractions</span>
+                  </div>
+                  <div style={styles.mobileSummaryTip}>
+                    <span style={styles.mobileSummaryTipIcon}>🍽️</span>
+                    <span>Try local cuisine at recommended restaurants</span>
+                  </div>
+                  <div style={styles.mobileSummaryTip}>
+                    <span style={styles.mobileSummaryTipIcon}>📸</span>
+                    <span>Don't forget to capture memories at each stop</span>
+                  </div>
+                  <div style={styles.mobileSummaryTip}>
+                    <span style={styles.mobileSummaryTipIcon}>💳</span>
+                    <span>Keep some cash handy for small purchases</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style={styles.mobileSummaryFooter}>
+                <div style={styles.mobileSummaryFooterItem}>
+                  <span style={styles.mobileSummaryFooterLabel}>Total Distance:</span>
+                  <span style={styles.mobileSummaryFooterValue}>
+                    ~{Math.round((itins[selectedDay]?.itinerary?.length || 0) * 2.5)} km
+                  </span>
+                </div>
+                <div style={styles.mobileSummaryFooterItem}>
+                  <span style={styles.mobileSummaryFooterLabel}>Estimated Cost:</span>
+                  <span style={styles.mobileSummaryFooterValue}>
+                    ${budget ? Math.round(budget / days) : 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -1211,7 +1211,7 @@ const styles = {
       textAlign: "center",
     },
   },
-  heroLeft: { 
+  heroLeft: {
     minWidth: 0,
     "@media (max-width: 768px)": {
       textAlign: "center",
@@ -1348,19 +1348,19 @@ const styles = {
       flex: "none",
     },
   },
-       form: { 
-    display: "flex", 
-    flexDirection: "column", 
-    gap: 10, 
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
     width: "100%",
     "@media (max-width: 768px)": {
       gap: 12,
     },
   },
-  row: { 
-    display: "grid", 
-    gridTemplateColumns: "1fr 1fr 1fr", 
-    gap: 10, 
+  row: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 10,
     width: "100%",
     "@media (max-width: 768px)": {
       gridTemplateColumns: "1fr",
@@ -1534,18 +1534,18 @@ const styles = {
     textDecoration: "underline",
   },
 
-     emptyHint: {
-     opacity: 0.9,
-     fontSize: 14,
-     padding: 12,
-     borderRadius: 12,
-     background:
-       "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04))",
-     border: "1px solid rgba(255,255,255,0.12)",
-     "@media (max-width: 768px)": {
-       display: "none",
-     },
-   },
+  emptyHint: {
+    opacity: 0.9,
+    fontSize: 14,
+    padding: 12,
+    borderRadius: 12,
+    background:
+      "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04))",
+    border: "1px solid rgba(255,255,255,0.12)",
+    "@media (max-width: 768px)": {
+      display: "none",
+    },
+  },
 
 
 
