@@ -6,12 +6,24 @@
             "use": "@vercel/static-build",
             "config": {
                 "distDir": "build",
-                "installCommand": "npm install --force",
-                "buildCommand": "CI=false npx react-scripts build"
+                "installCommand": "npm install --force --no-cache",
+                "buildCommand": "CI=false INLINE_RUNTIME_CHUNK=false npm run build"
             }
         }
     ],
     "routes": [
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        {
+            "src": "/favicon.ico",
+            "dest": "/favicon.ico"
+        },
+        {
+            "src": "/manifest.json",
+            "dest": "/manifest.json"
+        },
         {
             "src": "/(.*)",
             "dest": "/index.html"
