@@ -852,15 +852,26 @@ const Home = () => {
                               click: () => setSelectedPlace(place)
                             }}
                           >
-                            <Popup>
-                              <div style={styles.popupContent}>
-                                <strong>Day {place.dayNumber}: {place.name}</strong>
-                                <br />
-                                <span style={{ fontSize: '12px', opacity: 0.8 }}>
-                                  {place.description?.substring(0, 100)}...
-                                </span>
-                              </div>
-                            </Popup>
+                                                         <Popup>
+                               <div style={styles.popupContent}>
+                                 <div style={styles.popupHeader}>
+                                   <span style={styles.popupDay}>Day {place.dayNumber}</span>
+                                   <span style={styles.popupLocation}>{place.location?.label || place.name}</span>
+                                 </div>
+                                 <div style={styles.popupTitle}>{place.name}</div>
+                                 <div style={styles.popupDescription}>
+                                   {place.description?.substring(0, 120)}...
+                                 </div>
+                                 <div style={styles.popupActions}>
+                                   <button 
+                                     style={styles.popupButton}
+                                     onClick={() => setSelectedPlace(place)}
+                                   >
+                                     View Details
+                                   </button>
+                                 </div>
+                               </div>
+                             </Popup>
                           </Marker>
                         ))}
                        {allRoutePositions.length > 1 && (
@@ -999,25 +1010,99 @@ const Home = () => {
             ))}
           </div>
 
-          {/* Daily Itinerary Summary */}
-          <div style={styles.mobileSummaryCard}>
-            <h2 style={styles.mobileSummaryTitle}>📋 Daily Itinerary Summary</h2>
-            <div style={styles.mobileSummaryContent}>
-              <p style={styles.mobileSummaryDescription}>
-                Day {selectedDay + 1}: {itins[selectedDay]?.title || 'Exploring the city'}
-              </p>
-              <ul style={styles.mobileSummaryList}>
-                {itins[selectedDay]?.itinerary?.map((place, index) => (
-                  <li key={index} style={styles.mobileSummaryItem}>
-                    {place.name}
-                  </li>
-                ))}
-              </ul>
-                             <div style={styles.mobileCostInfo}>
-                 Approx. Cost: ${itins[selectedDay]?.itinerary?.length * 50 || 0}
+                     {/* Daily Itinerary Summary */}
+           <div style={styles.mobileSummaryCard}>
+             <h2 style={styles.mobileSummaryTitle}>📋 Daily Itinerary Summary</h2>
+             <div style={styles.mobileSummaryContent}>
+               <div style={styles.mobileSummaryHeader}>
+                 <div style={styles.mobileSummaryDayInfo}>
+                   <span style={styles.mobileSummaryDayNumber}>Day {selectedDay + 1}</span>
+                   <span style={styles.mobileSummaryDayTitle}>
+                     {itins[selectedDay]?.title || 'Exploring the city'}
+                   </span>
+                 </div>
+                 <div style={styles.mobileSummaryStats}>
+                   <div style={styles.mobileSummaryStat}>
+                     <span style={styles.mobileSummaryStatLabel}>📍 Stops</span>
+                     <span style={styles.mobileSummaryStatValue}>
+                       {itins[selectedDay]?.itinerary?.length || 0}
+                     </span>
+                   </div>
+                   <div style={styles.mobileSummaryStat}>
+                     <span style={styles.mobileSummaryStatLabel}>⏱️ Duration</span>
+                     <span style={styles.mobileSummaryStatValue}>
+                       {Math.round((itins[selectedDay]?.itinerary?.length || 0) * 2.5)}h
+                     </span>
+                   </div>
+                                       <div style={styles.mobileSummaryStat}>
+                      <span style={styles.mobileSummaryStatLabel}>💰 Budget</span>
+                      <span style={styles.mobileSummaryStatValue}>
+                        ${budget ? Math.round(budget / days) : 0}
+                      </span>
+                    </div>
+                 </div>
                </div>
-            </div>
-          </div>
+               
+               <div style={styles.mobileSummaryTimeline}>
+                 <h3 style={styles.mobileSummaryTimelineTitle}>🗺️ Route Overview</h3>
+                 <div style={styles.mobileSummaryTimelineList}>
+                   {itins[selectedDay]?.itinerary?.map((place, index) => (
+                     <div key={index} style={styles.mobileSummaryTimelineItem}>
+                       <div style={styles.mobileSummaryTimelineDot}>
+                         <span style={styles.mobileSummaryTimelineNumber}>{index + 1}</span>
+                       </div>
+                       <div style={styles.mobileSummaryTimelineContent}>
+                         <div style={styles.mobileSummaryTimelineName}>{place.name}</div>
+                         <div style={styles.mobileSummaryTimelineTime}>
+                           {getTimeOfDay(index)} • {getDuration(index)}
+                         </div>
+                         <div style={styles.mobileSummaryTimelineDesc}>
+                           {place.description?.substring(0, 80)}...
+                         </div>
+                       </div>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+               
+               <div style={styles.mobileSummaryTips}>
+                 <h3 style={styles.mobileSummaryTipsTitle}>💡 Pro Tips</h3>
+                 <div style={styles.mobileSummaryTipsList}>
+                   <div style={styles.mobileSummaryTip}>
+                     <span style={styles.mobileSummaryTipIcon}>🚶‍♂️</span>
+                     <span>Start early to avoid crowds at popular attractions</span>
+                   </div>
+                   <div style={styles.mobileSummaryTip}>
+                     <span style={styles.mobileSummaryTipIcon}>🍽️</span>
+                     <span>Try local cuisine at recommended restaurants</span>
+                   </div>
+                   <div style={styles.mobileSummaryTip}>
+                     <span style={styles.mobileSummaryTipIcon}>📸</span>
+                     <span>Don't forget to capture memories at each stop</span>
+                   </div>
+                   <div style={styles.mobileSummaryTip}>
+                     <span style={styles.mobileSummaryTipIcon}>💳</span>
+                     <span>Keep some cash handy for small purchases</span>
+                   </div>
+                 </div>
+               </div>
+               
+               <div style={styles.mobileSummaryFooter}>
+                 <div style={styles.mobileSummaryFooterItem}>
+                   <span style={styles.mobileSummaryFooterLabel}>Total Distance:</span>
+                   <span style={styles.mobileSummaryFooterValue}>
+                     ~{Math.round((itins[selectedDay]?.itinerary?.length || 0) * 2.5)} km
+                   </span>
+                 </div>
+                                   <div style={styles.mobileSummaryFooterItem}>
+                    <span style={styles.mobileSummaryFooterLabel}>Estimated Cost:</span>
+                    <span style={styles.mobileSummaryFooterValue}>
+                      ${budget ? Math.round(budget / days) : 0}
+                    </span>
+                  </div>
+               </div>
+             </div>
+           </div>
         </div>
       )}
     </div>
@@ -1065,20 +1150,27 @@ const StyleTag = () => (
        -ms-overflow-style: none;
        scrollbar-width: none;
      }
-     .leaflet-popup-content-wrapper {
-       background: rgba(0,0,0,0.9) !important;
-       color: white !important;
-       border-radius: 12px !important;
-       border: 1px solid rgba(255,255,255,0.2) !important;
-     }
-     .leaflet-popup-tip {
-       background: rgba(0,0,0,0.9) !important;
-     }
-     .leaflet-popup-close-button {
-       color: white !important;
-       font-size: 18px !important;
-       font-weight: bold !important;
-     }
+           .leaflet-popup-content-wrapper {
+        background: rgba(0,0,0,0.95) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        backdrop-filter: blur(10px) !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+      }
+      .leaflet-popup-tip {
+        background: rgba(0,0,0,0.95) !important;
+      }
+      .leaflet-popup-close-button {
+        color: white !important;
+        font-size: 18px !important;
+        font-weight: bold !important;
+        opacity: 0.8 !important;
+        transition: opacity 140ms ease !important;
+      }
+      .leaflet-popup-close-button:hover {
+        opacity: 1 !important;
+      }
   `}</style>
 );
 
@@ -1101,7 +1193,9 @@ const styles = {
       "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0))",
     "@media (max-width: 768px)": {
       textAlign: "center",
-      padding: "20px 15px",
+      padding: "15px 10px",
+      order: 0,
+      borderBottom: "none",
     },
   },
   heroRow: {
@@ -1114,6 +1208,7 @@ const styles = {
     "@media (max-width: 768px)": {
       gridTemplateColumns: "1fr",
       gap: 15,
+      textAlign: "center",
     },
   },
   heroLeft: { 
@@ -1138,8 +1233,11 @@ const styles = {
     alignItems: "center",
     gap: 12,
     "@media (max-width: 768px)": {
-      fontSize: "1.8rem",
+      fontSize: "1.4rem",
       justifyContent: "center",
+      flexDirection: "column",
+      gap: 6,
+      lineHeight: 1.2,
     },
   },
   glowText: {
@@ -1157,9 +1255,10 @@ const styles = {
     maxWidth: 900,
     "@media (max-width: 768px)": {
       textAlign: "center",
-      fontSize: 14,
-      margin: "10px auto",
+      fontSize: 12,
+      margin: "8px auto",
       maxWidth: "100%",
+      lineHeight: 1.3,
     },
   },
   heroTips: {
@@ -1210,8 +1309,12 @@ const styles = {
     width: "100%",
     "@media (max-width: 768px)": {
       flexDirection: "column",
-      padding: "15px",
+      padding: "10px",
       gap: "15px",
+      minHeight: "auto",
+      width: "100%",
+      maxWidth: "100%",
+      overflow: "hidden",
     },
   },
 
@@ -1236,11 +1339,34 @@ const styles = {
       width: "100%",
       maxWidth: "100%",
       marginBottom: 0,
-      order: 2,
+      order: 1,
+      minWidth: "auto",
+      padding: "15px",
+      borderRadius: "12px",
+      gap: "12px",
+      flexShrink: 0,
+      flex: "none",
     },
   },
-     form: { display: "flex", flexDirection: "column", gap: 10, width: "100%" },
-   row: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, width: "100%" },
+       form: { 
+    display: "flex", 
+    flexDirection: "column", 
+    gap: 10, 
+    width: "100%",
+    "@media (max-width: 768px)": {
+      gap: 12,
+    },
+  },
+  row: { 
+    display: "grid", 
+    gridTemplateColumns: "1fr 1fr 1fr", 
+    gap: 10, 
+    width: "100%",
+    "@media (max-width: 768px)": {
+      gridTemplateColumns: "1fr",
+      gap: 12,
+    },
+  },
   input: {
     height: 44,
     padding: "0 12px",
@@ -1251,10 +1377,16 @@ const styles = {
       "linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25))",
     color: "#fff",
     fontWeight: 500,
-         boxShadow: "inset 0 4px 18px rgba(0,0,0,0.25)",
-     width: "100%",
-     boxSizing: "border-box",
-   },
+    boxShadow: "inset 0 4px 18px rgba(0,0,0,0.25)",
+    width: "100%",
+    boxSizing: "border-box",
+    "@media (max-width: 768px)": {
+      height: 48,
+      fontSize: 16,
+      padding: "0 14px",
+      borderRadius: "8px",
+    },
+  },
   button: {
     height: 46,
     borderRadius: 10,
@@ -1266,6 +1398,12 @@ const styles = {
     letterSpacing: 0.4,
     cursor: "pointer",
     boxShadow: "0 10px 24px rgba(33,150,243,0.35)",
+    "@media (max-width: 768px)": {
+      height: 48,
+      fontSize: 16,
+      fontWeight: 700,
+      borderRadius: "8px",
+    },
   },
   loadingWrap: {
     marginTop: 6,
@@ -1297,6 +1435,9 @@ const styles = {
     background:
       "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04))",
     border: "1px solid rgba(255,255,255,0.12)",
+    "@media (max-width: 768px)": {
+      display: "none",
+    },
   },
   metaKey: { opacity: 0.8, marginRight: 6 },
 
@@ -1311,6 +1452,9 @@ const styles = {
     msOverflowStyle: "none",
     "&::-webkit-scrollbar": {
       display: "none"
+    },
+    "@media (max-width: 768px)": {
+      display: "none",
     }
   },
   dayChip: {
@@ -1337,6 +1481,9 @@ const styles = {
     gridTemplateColumns: "1fr 1fr",
     gap: 12,
     marginTop: 4,
+    "@media (max-width: 768px)": {
+      display: "none",
+    },
   },
   card: {
     position: "relative",
@@ -1395,6 +1542,9 @@ const styles = {
      background:
        "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04))",
      border: "1px solid rgba(255,255,255,0.12)",
+     "@media (max-width: 768px)": {
+       display: "none",
+     },
    },
 
 
@@ -1413,8 +1563,12 @@ const styles = {
     boxShadow: "0 16px 50px rgba(0,0,0,0.45)",
     "@media (max-width: 768px)": {
       width: "100%",
-      minHeight: "300px",
-      order: 3,
+      minHeight: "400px",
+      order: 2,
+      marginTop: "0px",
+      borderRadius: "12px",
+      flexShrink: 0,
+      flex: "none",
     },
   },
 
@@ -1651,6 +1805,13 @@ const styles = {
     borderBottom: "1px solid rgba(255,255,255,0.06)",
     display: "flex",
     flexDirection: "column",
+    "@media (max-width: 768px)": {
+      position: "relative",
+      height: "400px",
+      borderRadius: "12px",
+      overflow: "hidden",
+      width: "100%",
+    },
   },
   mapHeader: {
     padding: "16px 20px",
@@ -1660,16 +1821,30 @@ const styles = {
     justifyContent: "space-between",
     flexWrap: "wrap",
     gap: "12px",
+    "@media (max-width: 768px)": {
+      padding: "10px 12px",
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: "6px",
+    },
   },
   mapTitle: {
     fontSize: "18px",
     fontWeight: 700,
     color: "#fff",
     margin: 0,
+    "@media (max-width: 768px)": {
+      fontSize: "14px",
+      textAlign: "center",
+    },
   },
   mapControls: {
     display: "flex",
     gap: "8px",
+    "@media (max-width: 768px)": {
+      justifyContent: "center",
+      flexWrap: "wrap",
+    },
   },
   mapControlBtn: {
     padding: "8px 12px",
@@ -1684,6 +1859,10 @@ const styles = {
     ":hover": {
       background: "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.08))",
       transform: "translateY(-1px)",
+    },
+    "@media (max-width: 768px)": {
+      padding: "8px 10px",
+      fontSize: "11px",
     },
   },
   googleMapsBtn: {
@@ -1701,6 +1880,12 @@ const styles = {
       transform: "translateY(-1px)",
       boxShadow: "0 8px 24px rgba(33,150,243,0.45)",
     },
+    "@media (max-width: 768px)": {
+      padding: "10px 12px",
+      fontSize: "13px",
+      width: "100%",
+      textAlign: "center",
+    },
   },
   mapContainer: {
     flex: 1,
@@ -1711,12 +1896,68 @@ const styles = {
     width: "100%",
     height: "100%",
     backgroundColor: "#fff",
+    "@media (max-width: 768px)": {
+      width: "100%",
+      height: "100%",
+      minHeight: "400px",
+    },
   },
   popupContent: {
-    maxWidth: "250px",
+    maxWidth: "280px",
     fontSize: "14px",
-    padding: "8px",
-    textAlign: "center",
+    padding: "12px",
+    textAlign: "left",
+    color: "#fff",
+  },
+  popupHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "8px",
+    paddingBottom: "6px",
+    borderBottom: "1px solid rgba(255,255,255,0.2)",
+  },
+  popupDay: {
+    fontSize: "11px",
+    fontWeight: "600",
+    color: "#667eea",
+    background: "rgba(102,126,234,0.2)",
+    padding: "2px 6px",
+    borderRadius: "4px",
+  },
+  popupLocation: {
+    fontSize: "11px",
+    color: "rgba(255,255,255,0.7)",
+    fontStyle: "italic",
+  },
+  popupTitle: {
+    fontSize: "16px",
+    fontWeight: "700",
+    color: "#fff",
+    marginBottom: "8px",
+    lineHeight: "1.3",
+  },
+  popupDescription: {
+    fontSize: "13px",
+    color: "rgba(255,255,255,0.8)",
+    lineHeight: "1.4",
+    marginBottom: "12px",
+  },
+  popupActions: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  popupButton: {
+    padding: "6px 12px",
+    fontSize: "12px",
+    fontWeight: "600",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    color: "#fff",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    transition: "all 140ms ease",
+    boxShadow: "0 2px 8px rgba(102,126,234,0.3)",
   },
 
   // ----- PREVIEW CONTAINER -----
@@ -1781,6 +2022,10 @@ const styles = {
     padding: "40px 20px",
     width: "100%",
     boxSizing: "border-box",
+    "@media (max-width: 768px)": {
+      padding: "20px 15px",
+      order: 3,
+    },
   },
   mobileDetailsHeader: {
     textAlign: "center",
@@ -1794,6 +2039,9 @@ const styles = {
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
     backgroundClip: "text",
+    "@media (max-width: 768px)": {
+      fontSize: "1.5rem",
+    },
   },
   mobileDetailsSubtitle: {
     fontSize: "16px",
@@ -1806,6 +2054,10 @@ const styles = {
     justifyContent: "center",
     marginBottom: "30px",
     flexWrap: "wrap",
+    "@media (max-width: 768px)": {
+      gap: "8px",
+      marginBottom: "20px",
+    },
   },
   mobileDayButton: {
     padding: "12px 20px",
@@ -1819,6 +2071,10 @@ const styles = {
     fontWeight: "600",
     transition: "all 200ms ease",
     backdropFilter: "blur(10px)",
+    "@media (max-width: 768px)": {
+      padding: "10px 16px",
+      fontSize: "13px",
+    },
   },
   mobileActiveDayButton: {
     background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
@@ -1831,6 +2087,10 @@ const styles = {
     flexDirection: "column",
     gap: "20px",
     marginBottom: "40px",
+    "@media (max-width: 768px)": {
+      gap: "15px",
+      marginBottom: "30px",
+    },
   },
   mobilePlaceCard: {
     background: "rgba(255,255,255,0.08)",
@@ -1840,6 +2100,10 @@ const styles = {
     backdropFilter: "blur(10px)",
     boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
     transition: "transform 200ms ease",
+    "@media (max-width: 768px)": {
+      padding: "15px",
+      borderRadius: "12px",
+    },
   },
   mobilePlaceHeader: {
     display: "flex",
@@ -1942,29 +2206,162 @@ const styles = {
   mobileSummaryContent: {
     color: "rgba(255,255,255,0.9)",
   },
-  mobileSummaryDescription: {
-    margin: "0 0 15px 0",
-    fontSize: "16px",
-    lineHeight: "1.5",
-    textAlign: "center",
+  mobileSummaryHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: "20px",
+    paddingBottom: "15px",
+    borderBottom: "1px solid rgba(255,255,255,0.1)",
+    "@media (max-width: 768px)": {
+      flexDirection: "column",
+      gap: "15px",
+    },
   },
-  mobileSummaryList: {
-    margin: "0 0 20px 0",
-    paddingLeft: "25px",
+  mobileSummaryDayInfo: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "5px",
   },
-  mobileSummaryItem: {
-    fontSize: "15px",
-    marginBottom: "8px",
-    lineHeight: "1.4",
-  },
-  mobileCostInfo: {
-    fontSize: "16px",
+  mobileSummaryDayNumber: {
+    fontSize: "18px",
     fontWeight: "700",
     color: "#667eea",
-    padding: "15px 0",
-    borderTop: "1px solid rgba(255,255,255,0.1)",
-    marginTop: "15px",
+  },
+  mobileSummaryDayTitle: {
+    fontSize: "14px",
+    color: "rgba(255,255,255,0.8)",
+  },
+  mobileSummaryStats: {
+    display: "flex",
+    gap: "15px",
+    "@media (max-width: 768px)": {
+      gap: "10px",
+    },
+  },
+  mobileSummaryStat: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "3px",
+  },
+  mobileSummaryStatLabel: {
+    fontSize: "11px",
+    color: "rgba(255,255,255,0.6)",
     textAlign: "center",
+  },
+  mobileSummaryStatValue: {
+    fontSize: "16px",
+    fontWeight: "700",
+    color: "#fff",
+  },
+  mobileSummaryTimeline: {
+    marginBottom: "20px",
+  },
+  mobileSummaryTimelineTitle: {
+    fontSize: "16px",
+    fontWeight: "700",
+    margin: "0 0 15px 0",
+    color: "#fff",
+  },
+  mobileSummaryTimelineList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  mobileSummaryTimelineItem: {
+    display: "flex",
+    gap: "12px",
+    alignItems: "flex-start",
+  },
+  mobileSummaryTimelineDot: {
+    width: "24px",
+    height: "24px",
+    borderRadius: "50%",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+    marginTop: "2px",
+  },
+  mobileSummaryTimelineNumber: {
+    fontSize: "12px",
+    fontWeight: "700",
+    color: "#fff",
+  },
+  mobileSummaryTimelineContent: {
+    flex: 1,
+  },
+  mobileSummaryTimelineName: {
+    fontSize: "14px",
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: "3px",
+  },
+  mobileSummaryTimelineTime: {
+    fontSize: "12px",
+    color: "rgba(255,255,255,0.7)",
+    marginBottom: "5px",
+  },
+  mobileSummaryTimelineDesc: {
+    fontSize: "12px",
+    color: "rgba(255,255,255,0.6)",
+    lineHeight: "1.4",
+  },
+  mobileSummaryTips: {
+    marginBottom: "20px",
+    padding: "15px",
+    background: "rgba(255,255,255,0.05)",
+    borderRadius: "12px",
+    border: "1px solid rgba(255,255,255,0.1)",
+  },
+  mobileSummaryTipsTitle: {
+    fontSize: "16px",
+    fontWeight: "700",
+    margin: "0 0 12px 0",
+    color: "#fff",
+  },
+  mobileSummaryTipsList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+  },
+  mobileSummaryTip: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "13px",
+    color: "rgba(255,255,255,0.8)",
+    lineHeight: "1.4",
+  },
+  mobileSummaryTipIcon: {
+    fontSize: "14px",
+    flexShrink: 0,
+  },
+  mobileSummaryFooter: {
+    display: "flex",
+    justifyContent: "space-between",
+    paddingTop: "15px",
+    borderTop: "1px solid rgba(255,255,255,0.1)",
+    "@media (max-width: 768px)": {
+      flexDirection: "column",
+      gap: "8px",
+    },
+  },
+  mobileSummaryFooterItem: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  mobileSummaryFooterLabel: {
+    fontSize: "14px",
+    color: "rgba(255,255,255,0.7)",
+  },
+  mobileSummaryFooterValue: {
+    fontSize: "14px",
+    fontWeight: "700",
+    color: "#667eea",
   },
 };
 
@@ -1972,23 +2369,31 @@ const styles = {
 
 
 <style>{`
-  @media (max-width: 768px) {
-    .container { 
-      flex-direction: column !important; 
-      padding: 15px !important;
-      gap: 15px !important;
-    }
-    .left-panel {
-      width: 100% !important;
-      max-width: 100% !important;
-      margin-bottom: 0 !important;
-      order: 2 !important;
-    }
-    .right-panel {
-      width: 100% !important;
-      min-height: 300px !important;
-      order: 3 !important;
-    }
+     @media (max-width: 768px) {
+     .container { 
+       flex-direction: column !important; 
+       padding: 10px !important;
+       gap: 15px !important;
+       width: 100% !important;
+       max-width: 100% !important;
+       overflow: hidden !important;
+     }
+     .left-panel {
+       width: 100% !important;
+       max-width: 100% !important;
+       margin-bottom: 0 !important;
+       order: 1 !important;
+       flex-shrink: 0 !important;
+       flex: none !important;
+     }
+     .right-panel {
+       width: 100% !important;
+       min-height: 400px !important;
+       order: 2 !important;
+       margin-top: 0 !important;
+       flex-shrink: 0 !important;
+       flex: none !important;
+     }
     .form-row { 
       grid-template-columns: 1fr !important; 
       gap: 12px !important;
@@ -2001,7 +2406,7 @@ const styles = {
     .hero {
       text-align: center !important;
       padding: 20px 15px !important;
-      order: 1 !important;
+      order: 0 !important;
     }
     .heroRow {
       grid-template-columns: 1fr !important;
@@ -2011,14 +2416,17 @@ const styles = {
       display: none !important;
     }
     .heroTitle {
-      font-size: 1.8rem !important;
+      font-size: 1.6rem !important;
       justify-content: center !important;
+      flex-direction: column !important;
+      gap: 8px !important;
     }
     .heroSubtitle {
       text-align: center !important;
-      font-size: 14px !important;
+      font-size: 13px !important;
       margin: 10px auto !important;
       max-width: 100% !important;
+      line-height: 1.4 !important;
     }
     .heroTips {
       justify-content: center !important;
@@ -2028,43 +2436,64 @@ const styles = {
     /* Mobile Form Styles */
     .form {
       margin-bottom: 20px !important;
+      gap: 12px !important;
     }
     .input {
       height: 50px !important;
       font-size: 16px !important;
+      padding: 0 16px !important;
     }
     .button {
       height: 50px !important;
       font-size: 16px !important;
+      font-weight: 700 !important;
     }
 
-    /* Mobile Map Styles */
-    .mapSection {
-      position: relative !important;
-      height: 300px !important;
-      margin-bottom: 20px !important;
-    }
+         /* Mobile Map Styles */
+     .mapSection {
+       position: relative !important;
+       height: 400px !important;
+       margin-bottom: 0 !important;
+       border-radius: 12px !important;
+       overflow: hidden !important;
+       width: 100% !important;
+     }
     .mapHeader {
       padding: 12px 15px !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 8px !important;
     }
     .mapTitle {
       font-size: 16px !important;
+      text-align: center !important;
     }
     .mapControls {
       gap: 6px !important;
+      justify-content: center !important;
+      flex-wrap: wrap !important;
     }
     .mapControlBtn {
-      padding: 6px 10px !important;
-      font-size: 11px !important;
+      padding: 10px 14px !important;
+      font-size: 13px !important;
     }
-    .googleMapsBtn {
-      padding: 8px 12px !important;
-      font-size: 12px !important;
-    }
+         .googleMapsBtn {
+       padding: 12px 18px !important;
+       font-size: 15px !important;
+       width: 100% !important;
+       text-align: center !important;
+     }
+     
+     /* Ensure map container takes full width */
+     .mapContainer {
+       width: 100% !important;
+       height: 100% !important;
+       min-height: 400px !important;
+     }
 
     /* Mobile Details Section */
     .mobileDetailsSection {
-      order: 4 !important;
+      order: 3 !important;
       padding: 20px 15px !important;
       margin-top: 0 !important;
     }
@@ -2076,6 +2505,7 @@ const styles = {
     }
     .mobileDaySelector {
       margin-bottom: 20px !important;
+      gap: 8px !important;
     }
     .mobileDayButton {
       padding: 10px 16px !important;
@@ -2084,6 +2514,7 @@ const styles = {
     .mobilePlaceCard {
       margin-bottom: 15px !important;
       padding: 15px !important;
+      border-radius: 12px !important;
     }
     .mobilePlaceNumber {
       width: 35px !important;
@@ -2123,15 +2554,47 @@ const styles = {
     .mobileSummaryTitle {
       font-size: 18px !important;
     }
-    .mobileSummaryDescription {
-      font-size: 14px !important;
-    }
-    .mobileSummaryItem {
-      font-size: 14px !important;
-    }
-    .mobileCostInfo {
-      font-size: 14px !important;
-    }
+         .mobileSummaryHeader {
+       flex-direction: column !important;
+       gap: 15px !important;
+     }
+     .mobileSummaryStats {
+       gap: 10px !important;
+     }
+     .mobileSummaryStatLabel {
+       font-size: 10px !important;
+     }
+     .mobileSummaryStatValue {
+       font-size: 14px !important;
+     }
+     .mobileSummaryTimelineTitle {
+       font-size: 14px !important;
+     }
+     .mobileSummaryTimelineName {
+       font-size: 13px !important;
+     }
+     .mobileSummaryTimelineTime {
+       font-size: 11px !important;
+     }
+     .mobileSummaryTimelineDesc {
+       font-size: 11px !important;
+     }
+     .mobileSummaryTipsTitle {
+       font-size: 14px !important;
+     }
+     .mobileSummaryTip {
+       font-size: 12px !important;
+     }
+     .mobileSummaryFooter {
+       flex-direction: column !important;
+       gap: 8px !important;
+     }
+     .mobileSummaryFooterLabel {
+       font-size: 13px !important;
+     }
+     .mobileSummaryFooterValue {
+       font-size: 13px !important;
+     }
 
     /* Hide desktop elements on mobile */
     .meta, .dayChipsRow, .cardsGrid, .emptyHint {

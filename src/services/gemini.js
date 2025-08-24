@@ -34,7 +34,7 @@ Each place must include a long detailed description (history, cultural significa
 
 IMPORTANT: Use REAL and ACCURATE coordinates (latitude and longitude) for each location. Research actual coordinates for famous landmarks, museums, parks, and attractions in ${city}.
 
-ALSO IMPORTANT: For each place, include 2-3 nearby restaurants/food shops and 1-2 nearby hotels with real names, ratings, and prices.
+ALSO IMPORTANT: For each place, include 3-4 nearby restaurants/food shops and 2-3 nearby hotels with real names, ratings, and prices.
 
 CRITICAL: Return ONLY valid JSON in this exact structure, with NO additional text, explanations, or markdown formatting:
 
@@ -48,18 +48,44 @@ CRITICAL: Return ONLY valid JSON in this exact structure, with NO additional tex
         "location": { "lat": 28.6139, "lng": 77.2090, "label": "Place 1 Label" },
         "nearbyFood": [
           {
-            "name": "Restaurant Name",
+            "name": "Restaurant Name 1",
             "rating": "4.5/5",
             "distance": "300m away",
+            "description": "Brief description of the restaurant and its cuisine"
+          },
+          {
+            "name": "Restaurant Name 2",
+            "rating": "4.3/5",
+            "distance": "500m away",
+            "description": "Brief description of the restaurant and its cuisine"
+          },
+          {
+            "name": "Restaurant Name 3",
+            "rating": "4.7/5",
+            "distance": "700m away",
             "description": "Brief description of the restaurant and its cuisine"
           }
         ],
         "nearbyHotels": [
           {
-            "name": "Hotel Name",
+            "name": "Hotel Name 1",
             "rating": "4.3/5",
             "price": "₹2000/night",
             "distance": "500m away",
+            "description": "Brief description of the hotel"
+          },
+          {
+            "name": "Hotel Name 2",
+            "rating": "4.5/5",
+            "price": "₹3000/night",
+            "distance": "800m away",
+            "description": "Brief description of the hotel"
+          },
+          {
+            "name": "Hotel Name 3",
+            "rating": "4.1/5",
+            "price": "₹1500/night",
+            "distance": "1.2km away",
             "description": "Brief description of the hotel"
           }
         ]
@@ -67,7 +93,6 @@ CRITICAL: Return ONLY valid JSON in this exact structure, with NO additional tex
     ]
   }
 ]
-
 Do not include any text before or after the JSON array. Start with [ and end with ].`;
 
             console.log(`🤖 Sending request to Gemini API...`);
